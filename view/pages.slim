@@ -1,0 +1,10 @@
+doctype 5
+html
+  head
+    meta charset="UTF-8"
+    link rel=stylesheet href=/static/style.css
+    title history
+  body
+    div#content
+      - for page in pages
+        a href="#{page.Path}" = page.Title()

@@ -1,0 +1,10 @@
+body {
+	font-family: Meiryo
+}
+h1.title {
+  text-decoration: underline;
+}
+textarea {
+  width: 99%;
+  height: 200px;
+}
