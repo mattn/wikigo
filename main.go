@@ -3,11 +3,13 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"strings"
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"github.com/mattn/go-slim"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/russross/blackfriday"
@@ -113,5 +115,8 @@ func main() {
 	e.POST("/edit", update)
 	e.POST("/:path/edit", update)
 	e.Static("/static", "static")
+	if secret := os.Getenv("JWT_SECRET"); secret != "" {
+		e.Use(middleware.JWT([]byte(secret)))
+	}
 	e.Start(":8081")
 }
