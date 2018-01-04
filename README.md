@@ -8,6 +8,8 @@ Simple Wiki written in Go
 $ ./wikigo
 ```
 
+If you use Basic Authentication for editing pages, set `$WIKIGO_AUTH=user:pass`.
+
 ## License
 
 MIT
