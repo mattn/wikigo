@@ -82,16 +82,17 @@ func page(c echo.Context) error {
 	var page Page
 	db.Where("path=?", "/"+c.Param("path")).Find(&page)
 	return tplPage.Execute(c.Response(), map[string]interface{}{
-		"title":    page.Title(),
-		"path":     c.Param("path"),
-		"editpath": path.Join("/"+c.Param("path"), "edit"),
-		"content":  page.Body(),
+		"title":     page.Title(),
+		"path":      c.Param("path"),
+		"editpath":  path.Join("/"+c.Param("path"), "edit"),
+		"pagespath": "/pages",
+		"content":   page.Body(),
 	})
 }
 
 func pages(c echo.Context) error {
 	var pages []Page
-	db.Find(&pages)
+	db.Order("path").Find(&pages)
 	return tplPages.Execute(c.Response(), map[string]interface{}{
 		"pages": pages,
 	})
