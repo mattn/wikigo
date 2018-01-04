@@ -105,18 +105,34 @@ func update(c echo.Context) error {
 	return c.Redirect(http.StatusFound, page.Path)
 }
 
+func restricted() []echo.MiddlewareFunc {
+	secret := os.Getenv("WIKIGO_AUTH")
+	if secret == "" {
+		return nil
+	}
+	return []echo.MiddlewareFunc{
+		middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+			if username+":"+password == secret {
+				return true, nil
+			}
+			return false, nil
+		}),
+	}
+}
+
 func main() {
 	e := echo.New()
 	e.GET("/pages", pages)
-	e.GET("/edit", edit)
-	e.GET("/:path/edit", edit)
+
 	e.GET("/", page)
 	e.GET("/:path", page)
-	e.POST("/edit", update)
-	e.POST("/:path/edit", update)
+
+	ms := restricted()
+	e.GET("/edit", edit, ms...)
+	e.POST("/edit", update, ms...)
+	e.GET("/:path/edit", edit, ms...)
+	e.POST("/:path/edit", update, ms...)
+
 	e.Static("/static", "static")
-	if secret := os.Getenv("JWT_SECRET"); secret != "" {
-		e.Use(middleware.JWT([]byte(secret)))
-	}
 	e.Start(":8081")
 }
