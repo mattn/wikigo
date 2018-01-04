@@ -1,5 +1,7 @@
 package main
 
+//go:generate go-assets-builder -t static static view -o assets.go
+
 import (
 	"log"
 	"net/http"
@@ -49,18 +51,6 @@ var (
 
 func init() {
 	var err error
-	tplPage, err = slim.ParseFile("view/page.slim")
-	if err != nil {
-		log.Fatal(err)
-	}
-	tplEdit, err = slim.ParseFile("view/edit.slim")
-	if err != nil {
-		log.Fatal(err)
-	}
-	tplPages, err = slim.ParseFile("view/pages.slim")
-	if err != nil {
-		log.Fatal(err)
-	}
 	db, err = gorm.Open("sqlite3", "wiki.db")
 	if err != nil {
 		log.Fatal(err)
