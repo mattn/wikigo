@@ -128,6 +128,7 @@ func main() {
 	flag.Parse()
 
 	e := echo.New()
+
 	e.GET("/pages", pages)
 
 	e.GET("/", page)
@@ -140,5 +141,9 @@ func main() {
 	e.POST("/:path/edit", update, ms...)
 
 	e.Static("/static", "static")
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{}))
+	e.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
+		RedirectCode: http.StatusFound,
+	}))
 	e.Start(addr)
 }
