@@ -3,9 +3,10 @@ html
   head
     meta charset="UTF-8"
     link rel=stylesheet href=/static/style.css
-    title history
+    title pages
   body
     div#content
+      h1.title = "Pages"
       - for page in pages
         a href="#{page.Path}" = page.Title()
         br
