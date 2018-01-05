@@ -18,6 +18,15 @@ import (
 	"github.com/russross/blackfriday"
 )
 
+var (
+	extensions = blackfriday.EXTENSION_NO_INTRA_EMPHASIS |
+		blackfriday.EXTENSION_TABLES |
+		blackfriday.EXTENSION_FENCED_CODE |
+		blackfriday.EXTENSION_AUTOLINK |
+		blackfriday.EXTENSION_STRIKETHROUGH |
+		blackfriday.EXTENSION_SPACE_HEADERS
+)
+
 type Page struct {
 	Path    string `gorm:"primary_key"`
 	Content string `gorm:"not null"`
@@ -40,7 +49,8 @@ func (p *Page) Body() string {
 			body = ""
 		}
 	}
-	return string(blackfriday.MarkdownBasic([]byte(body)))
+	renderer := blackfriday.HtmlRenderer(0, "", "")
+	return string(blackfriday.Markdown([]byte(body), renderer, extensions))
 }
 
 var (
