@@ -4,22 +4,30 @@ package main
 
 import (
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/mattn/go-slim"
 )
 
 func init() {
-	var err error
-	tplPage, err = slim.ParseFile("view/page.slim")
+	exe, err := os.Executable()
 	if err != nil {
 		log.Fatal(err)
 	}
-	tplEdit, err = slim.ParseFile("view/edit.slim")
-	if err != nil {
-		log.Fatal(err)
+	dir := filepath.Dir(exe)
+	tset := []struct {
+		p string
+		t **slim.Template
+	}{
+		{"/view/page.slim", &tplPage},
+		{"/view/edit.slim", &tplEdit},
+		{"/view/pages.slim", &tplPages},
 	}
-	tplPages, err = slim.ParseFile("view/pages.slim")
-	if err != nil {
-		log.Fatal(err)
+	for _, t := range tset {
+		*(t.t), err = slim.ParseFile(filepath.Join(dir, t.p))
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
