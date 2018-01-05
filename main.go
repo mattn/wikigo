@@ -145,5 +145,5 @@ func main() {
 	e.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
 		RedirectCode: http.StatusFound,
 	}))
-	e.Start(addr)
+	log.Fatal(e.Start(addr))
 }
