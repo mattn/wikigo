@@ -60,15 +60,6 @@ var (
 	db       *gorm.DB
 )
 
-func init() {
-	var err error
-	db, err = gorm.Open("sqlite3", "wiki.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	db.AutoMigrate(&Page{})
-}
-
 func edit(c echo.Context) error {
 	var page Page
 	db.Where("path=?", "/"+c.Param("path")).Find(&page)
@@ -123,9 +114,17 @@ func restricted() []echo.MiddlewareFunc {
 }
 
 func main() {
-	var addr string
+	var addr, db string
 	flag.StringVar(&addr, "a", ":8081", "server address")
+	flag.StringVar(&db, "db", "wiki.db", "database file")
 	flag.Parse()
+
+	var err error
+	db, err = gorm.Open("sqlite3", db)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.AutoMigrate(&Page{})
 
 	e := echo.New()
 
