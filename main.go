@@ -3,6 +3,7 @@ package main
 //go:generate go-assets-builder -t static static view -o assets.go
 
 import (
+	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -112,6 +113,10 @@ func restricted() []echo.MiddlewareFunc {
 }
 
 func main() {
+	var addr string
+	flag.StringVar(&addr, "a", ":8081", "server address")
+	flag.Parse()
+
 	e := echo.New()
 	e.GET("/pages", pages)
 
@@ -125,5 +130,5 @@ func main() {
 	e.POST("/:path/edit", update, ms...)
 
 	e.Static("/static", "static")
-	e.Start(":8081")
+	e.Start(addr)
 }
