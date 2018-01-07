@@ -114,13 +114,13 @@ func restricted() []echo.MiddlewareFunc {
 }
 
 func main() {
-	var addr, db string
+	var addr, dsn string
 	flag.StringVar(&addr, "a", ":8081", "server address")
-	flag.StringVar(&db, "db", "wiki.db", "database file")
+	flag.StringVar(&dsn, "db", "wiki.db", "database file")
 	flag.Parse()
 
 	var err error
-	db, err = gorm.Open("sqlite3", db)
+	db, err = gorm.Open("sqlite3", dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
